@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "legendwatch",
+	"version": "${version}",
+	"name": "LegendWatch",
+	"description": "Displays a nametag overlay above players who crafted a legendary on Hoplite.",
+	"authors": [
+		"Outsights"
+	],
+	"contact": {},
+	"license": "MIT",
+	"icon": "assets/legendwatch/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.legendwatch.LegendwatchClient"
+		]
+	},
+	"mixins": [
+		{
+			"config": "legendwatch.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}

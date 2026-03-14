@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "com.legendwatch.mixin.client",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"NametagOverlayMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
