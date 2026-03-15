@@ -3,7 +3,8 @@
 	"package": "com.legendwatch.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"NametagOverlayMixin"
+		"PlayerNametagMixin",
+		"TabListMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -9,8 +9,9 @@ import java.util.regex.Pattern;
 
 public class ChatListener {
 
+    // Matches: "[RankIfAny] Username has crafted the ItemName! This legendary cannot be crafted again!"
     private static final Pattern CRAFT_PATTERN = Pattern.compile(
-            "^(.+?) has crafted the (.+?)! This legendary cannot be crafted again!$"
+            "^(?:\\[.+?\\]\\s+)?(.+?) has crafted the (.+?)! This legendary cannot be crafted again!$"
     );
 
     private static final Pattern[] RESET_PATTERNS = new Pattern[]{
@@ -32,9 +33,10 @@ public class ChatListener {
         if (overlay) return;
 
         String raw = message.getString();
+        // Strip Minecraft color codes
         String clean = raw.replaceAll("§[0-9a-fk-or]", "").trim();
 
-        // Check for match reset triggers
+        // Match reset triggers first
         for (Pattern reset : RESET_PATTERNS) {
             if (reset.matcher(clean).matches()) {
                 CraftTracker.onMatchReset();
@@ -42,15 +44,19 @@ public class ChatListener {
             }
         }
 
-        // Check for legendary craft announcement
+        // Match legendary craft announcements
         Matcher matcher = CRAFT_PATTERN.matcher(clean);
         if (matcher.matches()) {
-            String raw_username = matcher.group(1).trim().replaceAll("^\\[|\\]$", "");
-            String username = raw_username.contains(" ") ? raw_username.substring(raw_username.lastIndexOf(" ") + 1) : raw_username;
+            // Group 1 is now already the plain username (rank prefix is consumed by the non-capturing group)
+            String username = matcher.group(1).trim();
             String itemName = matcher.group(2).trim();
+
             CraftTracker.recordCraft(username, itemName);
+
             net.minecraft.client.MinecraftClient.getInstance().player.sendMessage(
-                    net.minecraft.text.Text.literal("§a[LegendWatch] Recorded: " + username + " → " + itemName), false);
+                    Text.literal("§a[LegendWatch] Recorded: §f" + username + " §7→ §6" + itemName),
+                    false
+            );
         }
     }
 }
