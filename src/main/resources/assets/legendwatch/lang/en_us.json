@@ -1,4 +1,5 @@
 {
-  "key.legendwatch.toggle": "Toggle Legendary Icons",
-  "key.category.legendwatch": "LegendWatch"
+  "key.legendwatch.toggle_mod": "Toggle Mod",
+  "key.legendwatch.toggle_icons": "Toggle Icons",
+  "key.category.legendwatch.general": "LegendWatch"
 }

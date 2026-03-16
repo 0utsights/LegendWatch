@@ -13,36 +13,50 @@ import org.lwjgl.glfw.GLFW;
 
 public class LegendwatchClient implements ClientModInitializer {
 
-    private static KeyBinding toggleKey;
+    private static KeyBinding toggleModKey;
+    private static KeyBinding toggleIconsKey;
 
     @Override
     public void onInitializeClient() {
         CraftTracker.init();
         ChatListener.init();
 
-        // 1.21.9+ requires a KeyBinding.Category object instead of a plain string
-        KeyBinding.Category category = KeyBinding.Category.register(
+        KeyBinding.Category category = KeyBinding.Category.create(
                 Identifier.of("legendwatch", "general")
         );
 
-        toggleKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.legendwatch.toggle",
+        toggleModKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.legendwatch.toggle_mod",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_UNKNOWN,
+                category
+        ));
+
+        toggleIconsKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.legendwatch.toggle_icons",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_UNKNOWN,
                 category
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (toggleKey.wasPressed()) {
-                boolean nowEnabled = !LegendwatchConfig.iconsEnabled.get();
-                LegendwatchConfig.iconsEnabled.set(nowEnabled);
-
+            while (toggleModKey.wasPressed()) {
+                boolean nowEnabled = !LegendwatchConfig.modEnabled.get();
+                LegendwatchConfig.modEnabled.set(nowEnabled);
                 if (client.player != null) {
                     String state = nowEnabled ? "§aEnabled" : "§cDisabled";
                     client.player.sendMessage(
-                            Text.literal("§6[LegendWatch] §fLegendary icons: " + state),
-                            false
-                    );
+                            Text.literal("§6[LegendWatch] §fMod: " + state), false);
+                }
+            }
+
+            while (toggleIconsKey.wasPressed()) {
+                boolean nowEnabled = !LegendwatchConfig.iconsEnabled.get();
+                LegendwatchConfig.iconsEnabled.set(nowEnabled);
+                if (client.player != null) {
+                    String state = nowEnabled ? "§aIcons" : "§eNames only";
+                    client.player.sendMessage(
+                            Text.literal("§6[LegendWatch] §fDisplay mode: " + state), false);
                 }
             }
         });
