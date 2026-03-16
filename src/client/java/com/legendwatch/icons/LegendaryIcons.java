@@ -1,5 +1,6 @@
 package com.legendwatch.icons;
 
+import net.minecraft.text.StyleSpriteSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -8,7 +9,8 @@ import java.util.Map;
 
 public class LegendaryIcons {
 
-    private static final Identifier ICON_FONT = Identifier.of("legendwatch", "icons");
+    private static final StyleSpriteSource ICON_FONT =
+            new StyleSpriteSource.Font(Identifier.of("legendwatch", "icons"));
 
     // Maps the exact item name from the Hoplite chat message to a PUA codepoint.
     // If an item is not in this map, the plain name is shown instead.
