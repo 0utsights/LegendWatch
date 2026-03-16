@@ -1,5 +1,6 @@
 package com.legendwatch.util;
 
+import com.legendwatch.LegendwatchConfig;
 import com.legendwatch.icons.LegendaryIcons;
 import com.legendwatch.tracker.CraftTracker;
 import com.legendwatch.tracker.LegendaryInfo;
@@ -10,12 +11,9 @@ import java.util.List;
 
 public class LegendSuffixUtil {
 
-    /**
-     * If the given username has recorded legendary crafts, appends each one
-     * (icon or name) separated by a space. Returns original text unchanged
-     * if no crafts are recorded.
-     */
     public static Text appendIfLegendary(Text original, String username) {
+        if (!LegendwatchConfig.iconsEnabled.get()) return original;
+
         List<LegendaryInfo> crafts = CraftTracker.getCrafts(username);
         if (crafts.isEmpty()) return original;
 
