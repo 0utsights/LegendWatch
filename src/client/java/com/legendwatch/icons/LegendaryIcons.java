@@ -16,7 +16,7 @@ public class LegendaryIcons {
     // If an item is not in this map, the plain name is shown instead.
     private static final Map<String, String> ICON_MAP = Map.ofEntries(
         Map.entry("Aiglos",             "\uE000"),
-        Map.entry("Artemis' Bow",       "\uE001"),
+        Map.entry("Artemis Bow",       "\uE001"),
         Map.entry("Beehive Blaster",    "\uE002"),
         Map.entry("Dragon Katana",      "\uE003"),
         Map.entry("Emerald Blade",      "\uE004"),
@@ -24,7 +24,7 @@ public class LegendaryIcons {
         Map.entry("Hypnosis Staff",     "\uE006"),
         Map.entry("Lich Staff",         "\uE007"),
         Map.entry("Magma Club",         "\uE008"),
-        Map.entry("Midas' Sword",       "\uE009"),
+        Map.entry("Midas Sword",       "\uE009"),
         Map.entry("Mjolnir",            "\uE00A"),
         Map.entry("Poseidon's Trident", "\uE00B"),
         Map.entry("Pufferfish Cannon",  "\uE00C"),
