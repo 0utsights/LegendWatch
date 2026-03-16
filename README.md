@@ -28,7 +28,7 @@ Available on CurseForge: https://legacy.curseforge.com/minecraft/mc-mods/legendw
 
 1. Install [Fabric Loader](https://fabricmc.net/use/installer/)
 2. Download [Fabric API](https://modrinth.com/mod/fabric-api)
-3. Download LegendWatch from [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/legendwatch)
+3. Download LegendWatch from github release (on the project page) OR [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/legendwatch)
 4. Place both jars in your `.minecraft/mods/` folder
 5. Launch Minecraft and join Hoplite
 
