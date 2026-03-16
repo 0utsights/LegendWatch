@@ -10,7 +10,6 @@ LegendWatch listens to chat for legendary craft announcements and records who cr
 
 - Shows legendary item icons on player nametags
 - Shows legendary item icons in the tab list
-- Supports multiple legendaries per player shown side by side
 - Toggle the mod on/off with a keybind
 - Toggle icons/names mode with a separate keybind
 - Both keybinds are unbound by default — set them in Options → Controls → LegendWatch
@@ -24,7 +23,6 @@ Available on CurseForge: https://legacy.curseforge.com/minecraft/mc-mods/legendw
 | Minecraft | Fabric API |
 |-----------|------------|
 | 1.21.11   | ✅ |
-| 1.21.10   | ✅ |
 
 ## Installation
 
@@ -47,7 +45,3 @@ Available on CurseForge: https://legacy.curseforge.com/minecraft/mc-mods/legendw
 ```
 
 Output jar will be in `build/libs/`.
-
-## License
-
-MIT
