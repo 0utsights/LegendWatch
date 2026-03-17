@@ -16,7 +16,7 @@ LegendWatch listens to chat for legendary craft announcements and records who cr
 
 ## Download
 
-Available on CurseForge: https://legacy.curseforge.com/minecraft/mc-mods/legendwatch
+Available on CurseForge: [https://curseforge.com/minecraft/mc-mods/legendwatch](https://www.curseforge.com/minecraft/mc-mods/legendwatch)
 
 ## Supported Versions
 
