@@ -2,6 +2,10 @@
 
 A Hoplite client mod that shows a small icon next to players' nametags and in the tab list when they've crafted a legendary.
 
+## Download
+
+Available on CurseForge: [https://curseforge.com/minecraft/mc-mods/legendwatch](https://www.curseforge.com/minecraft/mc-mods/legendwatch)
+
 ## How it works
 
 LegendWatch listens to chat for legendary craft announcements and records who crafted what. The item's icon (or name if no icon exists) then appears next to that player's nametag above their head and in the tab list for the rest of the match. When the match ends, the data is cleared automatically.
@@ -14,9 +18,7 @@ LegendWatch listens to chat for legendary craft announcements and records who cr
 - Toggle icons/names mode with a separate keybind
 - Both keybinds are unbound by default — set them in Options → Controls → LegendWatch
 
-## Download
 
-Available on CurseForge: [https://curseforge.com/minecraft/mc-mods/legendwatch](https://www.curseforge.com/minecraft/mc-mods/legendwatch)
 
 ## Supported Versions
 
