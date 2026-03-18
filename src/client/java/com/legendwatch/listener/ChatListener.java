@@ -18,7 +18,8 @@ public class ChatListener {
             Pattern.compile(".*Returning to lobby.*"),
             Pattern.compile(".*Match has ended.*"),
             Pattern.compile(".*Game over.*"),
-            Pattern.compile(".*You have been sent to.*")
+            Pattern.compile(".*You have been sent to.*"),
+            Pattern.compile(".*has joined.*")
     };
 
     public static void init() {
@@ -36,6 +37,10 @@ public class ChatListener {
         String clean = raw.replaceAll("§[0-9a-fk-or]", "")
                           .replaceAll("[^\\x00-\\x7F]", "")
                           .trim();
+
+        // Ignore player chat messages — they contain a colon (e.g. "Username: hello")
+        // This prevents players from spoofing reset triggers
+        if (clean.contains(":")) return;
 
         // Check for match reset triggers
         for (Pattern reset : RESET_PATTERNS) {
