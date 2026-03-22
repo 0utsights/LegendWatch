@@ -23,6 +23,30 @@ public class CraftTracker {
                  .add(new LegendaryInfo(itemName, System.currentTimeMillis()));
     }
 
+    public static void recordPredicted(String username, String itemName) {
+        CRAFT_MAP.computeIfAbsent(username, k -> Collections.synchronizedList(new ArrayList<>()))
+                 .add(new LegendaryInfo(itemName, System.currentTimeMillis(), true));
+    }
+
+    // Called when an elimination message is seen.
+    // Transfers all of slain's legendaries (confirmed + predicted) into slayer's list as predicted,
+    // then removes slain from the map entirely.
+    public static void onPlayerEliminated(String slain, String slayer) {
+        List<LegendaryInfo> slainCrafts = CRAFT_MAP.remove(slain);
+        if (slainCrafts == null || slainCrafts.isEmpty()) return;
+
+        List<LegendaryInfo> slayerList = CRAFT_MAP.computeIfAbsent(
+                slayer, k -> Collections.synchronizedList(new ArrayList<>()));
+
+        synchronized (slainCrafts) {
+            synchronized (slayerList) {
+                for (LegendaryInfo info : slainCrafts) {
+                    slayerList.add(new LegendaryInfo(info.itemName, info.craftedAtTimestamp, true));
+                }
+            }
+        }
+    }
+
     public static boolean hasCrafted(String username) {
         List<LegendaryInfo> list = CRAFT_MAP.get(username);
         return list != null && !list.isEmpty();

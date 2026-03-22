@@ -25,11 +25,19 @@ public class LegendSuffixUtil {
             result.append(Text.literal(" "));
 
             if (LegendwatchConfig.iconsEnabled.get()) {
-                // Icons mode: bitmap glyph (or name fallback if no icon exists)
+                // Icons mode: show icon (or gold name fallback), with a gray "?" suffix if predicted
                 result.append(LegendaryIcons.getDisplay(info.itemName));
+                if (info.predicted) {
+                    result.append(Text.literal("?").formatted(Formatting.GRAY));
+                }
             } else {
-                // Names mode: always show plain gold text regardless of icon availability
-                result.append(Text.literal(info.itemName).formatted(Formatting.GOLD));
+                // Names mode: confirmed = gold, predicted = italic gray with "?" suffix
+                if (info.predicted) {
+                    result.append(Text.literal(info.itemName + "?")
+                            .formatted(Formatting.GRAY, Formatting.ITALIC));
+                } else {
+                    result.append(Text.literal(info.itemName).formatted(Formatting.GOLD));
+                }
             }
         }
 

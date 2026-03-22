@@ -13,12 +13,11 @@ public class ChatListener {
             "^(.+?) has crafted the (.+?)! This legendary cannot be crafted again!$"
     );
 
+    private static final Pattern ELIMINATION_PATTERN = Pattern.compile(
+            "^ELIMINATION! (.+?) was slain by (.+?)$"
+    );
+
     private static final Pattern[] RESET_PATTERNS = new Pattern[]{
-            Pattern.compile(".*Sending you to.*"),
-            Pattern.compile(".*Returning to lobby.*"),
-            Pattern.compile(".*Match has ended.*"),
-            Pattern.compile(".*Game over.*"),
-            Pattern.compile(".*You have been sent to.*"),
             Pattern.compile(".*has joined.*")
     };
 
@@ -48,6 +47,23 @@ public class ChatListener {
                 CraftTracker.onMatchReset();
                 return;
             }
+        }
+
+        // Check for player elimination — transfer slain's legendaries to slayer as predicted
+        Matcher elimMatcher = ELIMINATION_PATTERN.matcher(clean);
+        if (elimMatcher.matches()) {
+            String slainGroup = elimMatcher.group(1).trim();
+            String slain = slainGroup.contains(" ")
+                    ? slainGroup.substring(slainGroup.lastIndexOf(" ") + 1)
+                    : slainGroup;
+
+            String slayerGroup = elimMatcher.group(2).trim();
+            String slayer = slayerGroup.contains(" ")
+                    ? slayerGroup.substring(slayerGroup.lastIndexOf(" ") + 1)
+                    : slayerGroup;
+
+            CraftTracker.onPlayerEliminated(slain, slayer);
+            return;
         }
 
         // Check for legendary craft announcement
