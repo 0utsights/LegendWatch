@@ -12,12 +12,12 @@ LegendWatch listens to chat for legendary craft announcements and records who cr
 
 ## Features
 
-- Shows legendary item icons on player nametags
-- Shows legendary item icons in the tab list
+- Shows legendary item icons (or names) next to player nametags above their head
+- Shows legendary item icons (or names) in the tab list
+- Tracks legendary transfers — when a player is eliminated, their legendaries move to the killer's tag as predicted (shown with a `?`)
 - Toggle the mod on/off with a keybind
-- Toggle icons/names mode with a separate keybind
+- Toggle between icons and names-only mode with a separate keybind
 - Both keybinds are unbound by default — set them in Options → Controls → LegendWatch
-
 
 
 ## Supported Versions
