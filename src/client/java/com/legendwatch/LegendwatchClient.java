@@ -17,6 +17,7 @@ public class LegendwatchClient implements ClientModInitializer {
 
     private static KeyBinding toggleModKey;
     private static KeyBinding toggleIconsKey;
+    private static KeyBinding togglePredictedKey;
 
     @Override
     public void onInitializeClient() {
@@ -41,6 +42,13 @@ public class LegendwatchClient implements ClientModInitializer {
                 GLFW.GLFW_KEY_UNKNOWN,
                 category
         ));
+
+        togglePredictedKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.legendwatch.toggle_predicted",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_UNKNOWN,
+                category
+        ));
         //?} else {
         /*toggleModKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.legendwatch.toggle_mod",
@@ -51,6 +59,13 @@ public class LegendwatchClient implements ClientModInitializer {
 
         toggleIconsKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.legendwatch.toggle_icons",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_UNKNOWN,
+                "key.category.legendwatch.general"
+        ));
+
+        togglePredictedKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.legendwatch.toggle_predicted",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_UNKNOWN,
                 "key.category.legendwatch.general"
@@ -75,6 +90,16 @@ public class LegendwatchClient implements ClientModInitializer {
                     String state = nowEnabled ? "§aIcons" : "§eNames only";
                     client.player.sendMessage(
                             Text.literal("§6[LegendWatch] §fDisplay mode: " + state), false);
+                }
+            }
+
+            while (togglePredictedKey.wasPressed()) {
+                boolean nowEnabled = !LegendwatchConfig.predictedEnabled.get();
+                LegendwatchConfig.predictedEnabled.set(nowEnabled);
+                if (client.player != null) {
+                    String state = nowEnabled ? "§aShown" : "§cHidden";
+                    client.player.sendMessage(
+                            Text.literal("§6[LegendWatch] §fPredicted legendaries: " + state), false);
                 }
             }
         });

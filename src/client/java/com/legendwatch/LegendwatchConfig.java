@@ -9,4 +9,7 @@ public class LegendwatchConfig {
 
     // When false: show legendary name as plain gold text instead of the bitmap icon
     public static final AtomicBoolean iconsEnabled = new AtomicBoolean(true);
+
+    // When false: predicted legendaries (obtained by kill) are hidden entirely
+    public static final AtomicBoolean predictedEnabled = new AtomicBoolean(true);
 }

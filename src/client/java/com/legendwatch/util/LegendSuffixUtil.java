@@ -22,6 +22,9 @@ public class LegendSuffixUtil {
         MutableText result = Text.empty().append(original);
 
         for (LegendaryInfo info : crafts) {
+            // Skip predicted legendaries if the player has them hidden
+            if (info.predicted && !LegendwatchConfig.predictedEnabled.get()) continue;
+
             result.append(Text.literal(" "));
 
             if (LegendwatchConfig.iconsEnabled.get()) {
