@@ -14,7 +14,7 @@ public class ChatListener {
     );
 
     private static final Pattern ELIMINATION_PATTERN = Pattern.compile(
-            "^ELIMINATION! (.+?) was slain by (.+?)$"
+            "^ELIMINATION! (.+?) was (.+)$"
     );
 
     private static final Pattern[] RESET_PATTERNS = new Pattern[]{
@@ -52,15 +52,29 @@ public class ChatListener {
         // Check for player elimination — transfer slain's legendaries to slayer as predicted
         Matcher elimMatcher = ELIMINATION_PATTERN.matcher(clean);
         if (elimMatcher.matches()) {
+            // Slain: last word of group 1 (strips rank prefix)
             String slainGroup = elimMatcher.group(1).trim();
             String slain = slainGroup.contains(" ")
                     ? slainGroup.substring(slainGroup.lastIndexOf(" ") + 1)
                     : slainGroup;
 
-            String slayerGroup = elimMatcher.group(2).trim();
-            String slayer = slayerGroup.contains(" ")
-                    ? slayerGroup.substring(slayerGroup.lastIndexOf(" ") + 1)
-                    : slayerGroup;
+            // Slayer: check the last 3 words of the remainder for one containing "'s"
+            // If found, the word just before it is the slayer (e.g. "username2's Excalibur")
+            // If not found, the last word is the slayer (e.g. "slain by username2")
+            String remainder = elimMatcher.group(2).trim();
+            String[] words = remainder.split(" ");
+            String slayer = null;
+            int checkFrom = Math.max(0, words.length - 3);
+            for (int i = checkFrom; i < words.length; i++) {
+                if (words[i].contains("'s")) {
+                    // The slayer is the word immediately before the "'s" word
+                    slayer = i > 0 ? words[i - 1] : null;
+                    break;
+                }
+            }
+            if (slayer == null) {
+                slayer = words[words.length - 1];
+            }
 
             CraftTracker.onPlayerEliminated(slain, slayer);
             return;
