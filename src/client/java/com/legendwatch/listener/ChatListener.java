@@ -14,7 +14,7 @@ public class ChatListener {
     );
 
     private static final Pattern ELIMINATION_PATTERN = Pattern.compile(
-            "^ELIMINATION! (.+?) was (.+)$"
+            "^ELIMINATION! (.+?) (?:was|has) (.+)$"
     );
 
     private static final Pattern[] RESET_PATTERNS = new Pattern[]{
@@ -59,7 +59,8 @@ public class ChatListener {
                     : slainGroup;
 
             // Slayer: check the last 3 words of the remainder for one containing "'s"
-            // If found, the word just before it is the slayer (e.g. "username2's Excalibur")
+            // If found, that word IS the slayer with a weapon suffix — strip from "'s" onward
+            // (e.g. "Player813's Diamond Sword" → "Player813")
             // If not found, the last word is the slayer (e.g. "slain by username2")
             String remainder = elimMatcher.group(2).trim();
             String[] words = remainder.split(" ");
@@ -67,8 +68,7 @@ public class ChatListener {
             int checkFrom = Math.max(0, words.length - 3);
             for (int i = checkFrom; i < words.length; i++) {
                 if (words[i].contains("'s")) {
-                    // The slayer is the word immediately before the "'s" word
-                    slayer = i > 0 ? words[i - 1] : null;
+                    slayer = words[i].substring(0, words[i].indexOf("'s"));
                     break;
                 }
             }
