@@ -5,6 +5,7 @@ A Hoplite client mod that shows a small icon next to players' nametags and in th
 ## Download
 
 Available on CurseForge: [https://curseforge.com/minecraft/mc-mods/legendwatch](https://www.curseforge.com/minecraft/mc-mods/legendwatch)
+And Modrinth: [https://modrinth.com/mod/legendwatch](https://modrinth.com/mod/legendwatch)
 
 ## How it works
 
