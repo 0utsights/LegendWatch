@@ -19,6 +19,7 @@ public class TabListMixin {
                 ? entry.getDisplayName().getString()
                 : original.getString())
                 .replaceAll("§[0-9a-fk-or]", "")
+                .replaceAll("[^\\x00-\\x7F]", "")
                 .trim();
 
         return LegendSuffixUtil.appendIfLegendary(original, username);
