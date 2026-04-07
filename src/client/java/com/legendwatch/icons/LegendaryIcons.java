@@ -6,6 +6,7 @@ import net.minecraft.text.StyleSpriteSource;
 //?}
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import com.legendwatch.LegendwatchConfig;
 
 import java.util.Map;
 
@@ -14,10 +15,14 @@ public class LegendaryIcons {
     //? if >=1.21.9 {
     private static final StyleSpriteSource ICON_FONT =
             new StyleSpriteSource.Font(Identifier.of("legendwatch", "icons"));
+    private static final StyleSpriteSource TRANSPARENT_ICON_FONT =
+            new StyleSpriteSource.Font(Identifier.of("legendwatch", "transparent_icons"));
     //?} else if >=1.21 {
-    /*private static final Identifier ICON_FONT = Identifier.of("legendwatch", "icons");*/
+    /*private static final Identifier ICON_FONT = Identifier.of("legendwatch", "icons");
+    private static final Identifier TRANSPARENT_ICON_FONT = Identifier.of("legendwatch", "transparent_icons");*/
     //?} else {
-    /*private static final Identifier ICON_FONT = new Identifier("legendwatch", "icons");*/
+    /*private static final Identifier ICON_FONT = new Identifier("legendwatch", "icons");
+    private static final Identifier TRANSPARENT_ICON_FONT = new Identifier("legendwatch", "transparent_icons");*/
     //?}
 
     private static final Map<String, String> ICON_MAP = Map.ofEntries(
@@ -74,8 +79,15 @@ public class LegendaryIcons {
     public static Text getDisplay(String itemName) {
         String codepoint = ICON_MAP.get(itemName);
         if (codepoint != null) {
+            //? if >=1.21.9 {
+            StyleSpriteSource font = LegendwatchConfig.transparentIconsEnabled.get()
+                    ? TRANSPARENT_ICON_FONT : ICON_FONT;
+            //?} else {
+            /*Identifier font = LegendwatchConfig.transparentIconsEnabled.get()
+                    ? TRANSPARENT_ICON_FONT : ICON_FONT;*/
+            //?}
             return Text.literal(codepoint)
-                    .styled(style -> style.withFont(ICON_FONT)
+                    .styled(style -> style.withFont(font)
                                          .withColor(0xFFFFFF));
         }
         return Text.literal(itemName).formatted(Formatting.GOLD);

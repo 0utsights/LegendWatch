@@ -18,6 +18,7 @@ public class LegendwatchClient implements ClientModInitializer {
     private static KeyBinding toggleModKey;
     private static KeyBinding toggleIconsKey;
     private static KeyBinding togglePredictedKey;
+    private static KeyBinding toggleTransparentKey;
 
     @Override
     public void onInitializeClient() {
@@ -49,6 +50,13 @@ public class LegendwatchClient implements ClientModInitializer {
                 GLFW.GLFW_KEY_UNKNOWN,
                 category
         ));
+
+        toggleTransparentKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.legendwatch.toggle_transparent",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_UNKNOWN,
+                category
+        ));
         //?} else {
         /*toggleModKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.legendwatch.toggle_mod",
@@ -66,6 +74,13 @@ public class LegendwatchClient implements ClientModInitializer {
 
         togglePredictedKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.legendwatch.toggle_predicted",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_UNKNOWN,
+                "key.category.legendwatch.general"
+        ));
+
+        toggleTransparentKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.legendwatch.toggle_transparent",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_UNKNOWN,
                 "key.category.legendwatch.general"
@@ -100,6 +115,16 @@ public class LegendwatchClient implements ClientModInitializer {
                     String state = nowEnabled ? "§aShown" : "§cHidden";
                     client.player.sendMessage(
                             Text.literal("§6[LegendWatch] §fPredicted legendaries: " + state), false);
+                }
+            }
+
+            while (toggleTransparentKey.wasPressed()) {
+                boolean nowEnabled = !LegendwatchConfig.transparentIconsEnabled.get();
+                LegendwatchConfig.transparentIconsEnabled.set(nowEnabled);
+                if (client.player != null) {
+                    String state = nowEnabled ? "§aTransparent" : "§7Solid";
+                    client.player.sendMessage(
+                            Text.literal("§6[LegendWatch] §fIcon style: " + state), false);
                 }
             }
         });
