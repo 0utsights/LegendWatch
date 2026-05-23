@@ -8,6 +8,9 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
+//? if >=1.21.9 {
+import net.minecraft.util.Identifier;
+//?}
 import org.lwjgl.glfw.GLFW;
 
 public class LegendwatchClient implements ClientModInitializer {
@@ -16,39 +19,20 @@ public class LegendwatchClient implements ClientModInitializer {
     private static KeyBinding toggleIconsKey;
     private static KeyBinding togglePredictedKey;
     private static KeyBinding toggleTransparentKey;
+    //? if >=1.21.9 {
+    private static final KeyBinding.Category KEY_CATEGORY =
+            KeyBinding.Category.create(Identifier.of("legendwatch", "general"));
+    //?}
 
     @Override
     public void onInitializeClient() {
         CraftTracker.init();
         ChatListener.init();
 
-        toggleModKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.legendwatch.toggle_mod",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_UNKNOWN,
-                "key.category.legendwatch.general"
-        ));
-
-        toggleIconsKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.legendwatch.toggle_icons",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_UNKNOWN,
-                "key.category.legendwatch.general"
-        ));
-
-        togglePredictedKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.legendwatch.toggle_predicted",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_UNKNOWN,
-                "key.category.legendwatch.general"
-        ));
-
-        toggleTransparentKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.legendwatch.toggle_transparent",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_UNKNOWN,
-                "key.category.legendwatch.general"
-        ));
+        toggleModKey = registerKeyBinding("key.legendwatch.toggle_mod");
+        toggleIconsKey = registerKeyBinding("key.legendwatch.toggle_icons");
+        togglePredictedKey = registerKeyBinding("key.legendwatch.toggle_predicted");
+        toggleTransparentKey = registerKeyBinding("key.legendwatch.toggle_transparent");
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (toggleModKey.wasPressed()) {
@@ -91,5 +75,18 @@ public class LegendwatchClient implements ClientModInitializer {
                 }
             }
         });
+    }
+
+    private static KeyBinding registerKeyBinding(String translationKey) {
+        return KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                translationKey,
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_UNKNOWN,
+                //? if >=1.21.9 {
+                KEY_CATEGORY
+                //?} else {
+                /*"key.category.legendwatch.general"*/
+                //?}
+        ));
     }
 }
