@@ -9,7 +9,7 @@ And Modrinth: [https://modrinth.com/mod/legendwatch](https://modrinth.com/mod/le
 
 ## How it works
 
-LegendWatch listens to chat for legendary craft announcements and records who crafted what. The item's icon (or name if no icon exists) then appears next to that player's nametag above their head and in the tab list for the rest of the match. When the match ends, the data is cleared automatically.
+LegendWatch listens to chat for legendary craft announcements and records who crafted what. The item's icon (or name if no icon exists) then appears inside that player's nametag above their head and in the tab list for the rest of the match. When the match ends, the data is cleared automatically.
 
 ## Features
 
@@ -37,7 +37,7 @@ LegendWatch listens to chat for legendary craft announcements and records who cr
 
 ## Requirements
 
-- Minecraft 1.21.10 or 1.21.11
+- Minecraft 1.21.8 through 1.21.11
 - Fabric Loader 0.18.1+
 - Fabric API
 
