@@ -82,7 +82,7 @@ public class LegendaryIcons {
         Map.entry("Chrono Sword",             new LegendaryDefinition("\uE02F")),
         Map.entry("Sakura Tessen",            new LegendaryDefinition("\uE030")),
         Map.entry("Elder Eye of Possession",  new LegendaryDefinition("\uE031")),
-        Map.entry("Dragonflame Catalyst",     new LegendaryDefinition("\uE032")),
+        Map.entry("Dragon Sceptre",           new LegendaryDefinition("\uE032")),
         Map.entry("Sceptre of Arachne",       new LegendaryDefinition("\uE033")),
         Map.entry("Vampire Sabre",            new LegendaryDefinition("\uE034"))
     );
