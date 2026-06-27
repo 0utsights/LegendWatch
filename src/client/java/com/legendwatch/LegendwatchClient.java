@@ -26,6 +26,7 @@ public class LegendwatchClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        LegendwatchConfig.load();
         CraftTracker.init();
         ChatListener.init();
 
@@ -38,6 +39,7 @@ public class LegendwatchClient implements ClientModInitializer {
             while (toggleModKey.wasPressed()) {
                 boolean nowEnabled = !LegendwatchConfig.modEnabled.get();
                 LegendwatchConfig.modEnabled.set(nowEnabled);
+                LegendwatchConfig.save();
                 if (client.player != null) {
                     String state = nowEnabled ? "§aEnabled" : "§cDisabled";
                     client.player.sendMessage(
@@ -48,6 +50,7 @@ public class LegendwatchClient implements ClientModInitializer {
             while (toggleIconsKey.wasPressed()) {
                 boolean nowEnabled = !LegendwatchConfig.iconsEnabled.get();
                 LegendwatchConfig.iconsEnabled.set(nowEnabled);
+                LegendwatchConfig.save();
                 if (client.player != null) {
                     String state = nowEnabled ? "§aIcons" : "§eNames only";
                     client.player.sendMessage(
@@ -58,6 +61,7 @@ public class LegendwatchClient implements ClientModInitializer {
             while (togglePredictedKey.wasPressed()) {
                 boolean nowEnabled = !LegendwatchConfig.predictedEnabled.get();
                 LegendwatchConfig.predictedEnabled.set(nowEnabled);
+                LegendwatchConfig.save();
                 if (client.player != null) {
                     String state = nowEnabled ? "§aShown" : "§cHidden";
                     client.player.sendMessage(
@@ -68,6 +72,7 @@ public class LegendwatchClient implements ClientModInitializer {
             while (toggleTransparentKey.wasPressed()) {
                 boolean nowEnabled = !LegendwatchConfig.transparentIconsEnabled.get();
                 LegendwatchConfig.transparentIconsEnabled.set(nowEnabled);
+                LegendwatchConfig.save();
                 if (client.player != null) {
                     String state = nowEnabled ? "§aTransparent" : "§7Solid";
                     client.player.sendMessage(

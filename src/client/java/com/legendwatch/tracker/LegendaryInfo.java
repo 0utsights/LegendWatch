@@ -15,4 +15,14 @@ public class LegendaryInfo {
         this.craftedAtTimestamp = craftedAtTimestamp;
         this.predicted = predicted;
     }
+
+    public LegendaryInfo asPredicted() {
+        if (predicted) return this;
+        return new LegendaryInfo(itemName, craftedAtTimestamp, true);
+    }
+
+    public LegendaryInfo asConfirmed() {
+        if (!predicted) return this;
+        return new LegendaryInfo(itemName, craftedAtTimestamp, false);
+    }
 }

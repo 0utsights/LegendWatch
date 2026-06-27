@@ -12,6 +12,16 @@ import java.util.Map;
 
 public class LegendaryIcons {
 
+    private static final Map<String, String> LEGENDARY_ALIASES = Map.ofEntries(
+        Map.entry("Reinforced Elytra's Explosion", "Reinforced Elytra"),
+        Map.entry("Summoned Ravager", "Ravager Horn"),
+        Map.entry("Happy Ghast", "Ghastly Whistle"),
+        Map.entry("Phantom Bow", "Phantom Longbow"),
+        Map.entry("Headhunter's Might", "Headhunter's Chestpiece"),
+        Map.entry("Dragonight Staff", "Dragon Sceptre"),
+        Map.entry("Dragonflame Catalyst", "Dragon Sceptre")
+    );
+
     private record LegendaryDefinition(String codepoint) {
         private boolean hasIcon() {
             return codepoint != null;
@@ -111,5 +121,11 @@ public class LegendaryIcons {
 
     public static boolean isKnownLegendary(String itemName) {
         return LEGENDARY_MAP.containsKey(itemName);
+    }
+
+    public static String getCanonicalName(String itemName) {
+        if (itemName == null) return null;
+        if (LEGENDARY_MAP.containsKey(itemName)) return itemName;
+        return LEGENDARY_ALIASES.get(itemName);
     }
 }
