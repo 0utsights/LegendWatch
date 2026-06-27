@@ -29,13 +29,10 @@ public class LegendwatchConfig {
 
     // Experimental: if a player with confirmed Gerald gets a kill with another legendary,
     // predict that copied legendary until it is confirmed through later observation.
-    public static final AtomicBoolean experimentalGeraldTrackingEnabled = new AtomicBoolean(false);
+    public static final AtomicBoolean experimentalGeraldTrackingEnabled = new AtomicBoolean(true);
 
-    // Experimental: reserved for Midas scoring once the exact formula is finalized.
-    public static final AtomicBoolean experimentalMidasTrackingEnabled = new AtomicBoolean(false);
-
-    // Experimental: reserved for generic per-legendary kill counters.
-    public static final AtomicBoolean experimentalKillCounterTrackingEnabled = new AtomicBoolean(false);
+    // Experimental: show and update a Midas Sword score from observed Midas kill messages.
+    public static final AtomicBoolean experimentalMidasTrackingEnabled = new AtomicBoolean(true);
 
     public static void load() {
         Properties properties = new Properties();
@@ -59,9 +56,6 @@ public class LegendwatchConfig {
         experimentalMidasTrackingEnabled.set(readBoolean(properties,
                 "experimental_midas_tracking_enabled",
                 experimentalMidasTrackingEnabled.get()));
-        experimentalKillCounterTrackingEnabled.set(readBoolean(properties,
-                "experimental_kill_counter_tracking_enabled",
-                experimentalKillCounterTrackingEnabled.get()));
 
         save();
     }
@@ -77,8 +71,6 @@ public class LegendwatchConfig {
                 Boolean.toString(experimentalGeraldTrackingEnabled.get()));
         properties.setProperty("experimental_midas_tracking_enabled",
                 Boolean.toString(experimentalMidasTrackingEnabled.get()));
-        properties.setProperty("experimental_kill_counter_tracking_enabled",
-                Boolean.toString(experimentalKillCounterTrackingEnabled.get()));
 
         try {
             Files.createDirectories(CONFIG_PATH.getParent());

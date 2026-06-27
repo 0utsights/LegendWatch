@@ -1,7 +1,7 @@
 package com.legendwatch;
 
-import com.legendwatch.tracker.CraftTracker;
 import com.legendwatch.listener.ChatListener;
+import com.legendwatch.tracker.CraftTracker;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -11,6 +11,7 @@ import net.minecraft.text.Text;
 //? if >=1.21.9 {
 import net.minecraft.util.Identifier;
 //?}
+import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
 
 public class LegendwatchClient implements ClientModInitializer {
@@ -41,9 +42,11 @@ public class LegendwatchClient implements ClientModInitializer {
                 LegendwatchConfig.modEnabled.set(nowEnabled);
                 LegendwatchConfig.save();
                 if (client.player != null) {
-                    String state = nowEnabled ? "§aEnabled" : "§cDisabled";
-                    client.player.sendMessage(
-                            Text.literal("§6[LegendWatch] §fMod: " + state), false);
+                    client.player.sendMessage(statusMessage(
+                            "Mod",
+                            nowEnabled ? "Enabled" : "Disabled",
+                            nowEnabled ? Formatting.GREEN : Formatting.RED
+                    ), false);
                 }
             }
 
@@ -52,9 +55,11 @@ public class LegendwatchClient implements ClientModInitializer {
                 LegendwatchConfig.iconsEnabled.set(nowEnabled);
                 LegendwatchConfig.save();
                 if (client.player != null) {
-                    String state = nowEnabled ? "§aIcons" : "§eNames only";
-                    client.player.sendMessage(
-                            Text.literal("§6[LegendWatch] §fDisplay mode: " + state), false);
+                    client.player.sendMessage(statusMessage(
+                            "Display mode",
+                            nowEnabled ? "Icons" : "Names only",
+                            nowEnabled ? Formatting.GREEN : Formatting.YELLOW
+                    ), false);
                 }
             }
 
@@ -63,9 +68,11 @@ public class LegendwatchClient implements ClientModInitializer {
                 LegendwatchConfig.predictedEnabled.set(nowEnabled);
                 LegendwatchConfig.save();
                 if (client.player != null) {
-                    String state = nowEnabled ? "§aShown" : "§cHidden";
-                    client.player.sendMessage(
-                            Text.literal("§6[LegendWatch] §fPredicted legendaries: " + state), false);
+                    client.player.sendMessage(statusMessage(
+                            "Predicted legendaries",
+                            nowEnabled ? "Shown" : "Hidden",
+                            nowEnabled ? Formatting.GREEN : Formatting.RED
+                    ), false);
                 }
             }
 
@@ -74,12 +81,20 @@ public class LegendwatchClient implements ClientModInitializer {
                 LegendwatchConfig.transparentIconsEnabled.set(nowEnabled);
                 LegendwatchConfig.save();
                 if (client.player != null) {
-                    String state = nowEnabled ? "§aTransparent" : "§7Solid";
-                    client.player.sendMessage(
-                            Text.literal("§6[LegendWatch] §fIcon style: " + state), false);
+                    client.player.sendMessage(statusMessage(
+                            "Icon style",
+                            nowEnabled ? "Transparent" : "Solid",
+                            nowEnabled ? Formatting.GREEN : Formatting.GRAY
+                    ), false);
                 }
             }
         });
+    }
+
+    private static Text statusMessage(String setting, String value, Formatting valueFormatting) {
+        return Text.literal("[LegendWatch] " + setting + ": ")
+                .formatted(Formatting.GOLD)
+                .append(Text.literal(value).formatted(valueFormatting));
     }
 
     private static KeyBinding registerKeyBinding(String translationKey) {

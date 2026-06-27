@@ -13,7 +13,7 @@ import java.util.List;
 public class LegendSuffixUtil {
 
     public static Text appendIfLegendary(Text original, String username) {
-        // Mod disabled — return vanilla nametag untouched
+        // Mod disabled; return vanilla nametag untouched.
         if (!LegendwatchConfig.modEnabled.get()) return original;
 
         List<LegendaryInfo> crafts = CraftTracker.getCrafts(username);
@@ -22,28 +22,37 @@ public class LegendSuffixUtil {
         MutableText result = Text.empty().append(original);
 
         for (LegendaryInfo info : crafts) {
-            // Skip predicted legendaries if the player has them hidden
             if (info.predicted && !LegendwatchConfig.predictedEnabled.get()) continue;
 
             result.append(Text.literal(" "));
+            String scoreSuffix = getExperimentalScoreSuffix(info);
 
             if (LegendwatchConfig.iconsEnabled.get()) {
-                // Icons mode: show icon (or gold name fallback), with a gray "?" suffix if predicted
                 result.append(LegendaryIcons.getDisplay(info.itemName));
+                if (!scoreSuffix.isEmpty()) {
+                    result.append(Text.literal(scoreSuffix).formatted(Formatting.GOLD));
+                }
                 if (info.predicted) {
                     result.append(Text.literal("?").formatted(Formatting.GRAY));
                 }
             } else {
-                // Names mode: confirmed = gold, predicted = italic gray with "?" suffix
+                String label = info.itemName + scoreSuffix;
                 if (info.predicted) {
-                    result.append(Text.literal(info.itemName + "?")
+                    result.append(Text.literal(label + "?")
                             .formatted(Formatting.GRAY, Formatting.ITALIC));
                 } else {
-                    result.append(Text.literal(info.itemName).formatted(Formatting.GOLD));
+                    result.append(Text.literal(label).formatted(Formatting.GOLD));
                 }
             }
         }
 
         return result;
+    }
+
+    private static String getExperimentalScoreSuffix(LegendaryInfo info) {
+        if (!LegendwatchConfig.experimentalMidasTrackingEnabled.get()) return "";
+        if (!CraftTracker.MIDAS_SWORD.equals(info.itemName)) return "";
+        if (info.killCount <= 0) return "";
+        return " " + info.killCount;
     }
 }

@@ -134,7 +134,8 @@ public class ChatListener {
                 CraftTracker.onLegendaryKillObserved(
                         exactLegendaryElimination.slayer(),
                         exactLegendaryElimination.observedLegendaryName(),
-                        LegendwatchConfig.experimentalGeraldTrackingEnabled.get()
+                        LegendwatchConfig.experimentalGeraldTrackingEnabled.get(),
+                        LegendwatchConfig.experimentalMidasTrackingEnabled.get()
                 );
             }
             return;
@@ -149,7 +150,8 @@ public class ChatListener {
                 CraftTracker.onLegendaryKillObserved(
                         elimination.slayer(),
                         elimination.observedLegendaryName(),
-                        LegendwatchConfig.experimentalGeraldTrackingEnabled.get()
+                        LegendwatchConfig.experimentalGeraldTrackingEnabled.get(),
+                        LegendwatchConfig.experimentalMidasTrackingEnabled.get()
                 );
             }
             return;
@@ -167,10 +169,6 @@ public class ChatListener {
             }
 
             CraftTracker.recordCraft(username, itemName);
-
-            net.minecraft.client.MinecraftClient.getInstance().player.sendMessage(
-                    Text.literal("\u00A7a[LegendWatch] Recorded: \u00A7f"
-                            + username + " \u00A77-> \u00A76" + itemName), false);
         }
     }
 

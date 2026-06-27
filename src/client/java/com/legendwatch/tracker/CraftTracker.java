@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CraftTracker {
 
     public static final String GERALD_THE_SNIFFER = "Gerald the Sniffer";
+    public static final String MIDAS_SWORD = "Midas Sword";
 
     // Maps username -> ordered list of legendaries crafted this match
     public static final ConcurrentHashMap<String, List<LegendaryInfo>> CRAFT_MAP = new ConcurrentHashMap<>();
@@ -21,11 +22,11 @@ public class CraftTracker {
     }
 
     public static void recordCraft(String username, String itemName) {
-        upsertLegendary(username, itemName, false, System.currentTimeMillis());
+        upsertLegendary(username, itemName, false, System.currentTimeMillis(), 0);
     }
 
     public static void recordPredicted(String username, String itemName) {
-        upsertLegendary(username, itemName, true, System.currentTimeMillis());
+        upsertLegendary(username, itemName, true, System.currentTimeMillis(), 0);
     }
 
     // Called when an elimination message is seen.
@@ -42,14 +43,15 @@ public class CraftTracker {
         synchronized (slainCrafts) {
             synchronized (slayerList) {
                 for (LegendaryInfo info : slainCrafts) {
-                    upsertLegendary(slayerList, info.itemName, true, info.craftedAtTimestamp);
+                    upsertLegendary(slayerList, info.itemName, true, info.craftedAtTimestamp, info.killCount);
                 }
             }
         }
     }
 
     public static void onLegendaryKillObserved(String username, String itemName,
-                                               boolean experimentalGeraldTrackingEnabled) {
+                                               boolean experimentalGeraldTrackingEnabled,
+                                               boolean experimentalMidasTrackingEnabled) {
         if (username == null || username.isBlank() || itemName == null || itemName.isBlank()) return;
 
         if (experimentalGeraldTrackingEnabled
@@ -60,13 +62,30 @@ public class CraftTracker {
             } else {
                 recordPredicted(username, itemName);
             }
+            if (shouldTrackMidasScore(itemName, experimentalMidasTrackingEnabled)) {
+                incrementLegendaryKillCount(username, itemName);
+            }
             return;
         }
 
-        if (confirmLegendary(username, itemName)) return;
-        if (hasLegendary(username, itemName)) return;
+        if (confirmLegendary(username, itemName)) {
+            if (shouldTrackMidasScore(itemName, experimentalMidasTrackingEnabled)) {
+                incrementLegendaryKillCount(username, itemName);
+            }
+            return;
+        }
+
+        if (hasLegendary(username, itemName)) {
+            if (shouldTrackMidasScore(itemName, experimentalMidasTrackingEnabled)) {
+                incrementLegendaryKillCount(username, itemName);
+            }
+            return;
+        }
 
         recordCraft(username, itemName);
+        if (shouldTrackMidasScore(itemName, experimentalMidasTrackingEnabled)) {
+            incrementLegendaryKillCount(username, itemName);
+        }
     }
 
     public static boolean hasCrafted(String username) {
@@ -126,27 +145,34 @@ public class CraftTracker {
     }
 
     private static void upsertLegendary(String username, String itemName, boolean predicted,
-                                        long timestamp) {
+                                        long timestamp, int killCount) {
         List<LegendaryInfo> list = CRAFT_MAP.computeIfAbsent(
                 username, k -> Collections.synchronizedList(new ArrayList<>())
         );
 
         synchronized (list) {
-            upsertLegendary(list, itemName, predicted, timestamp);
+            upsertLegendary(list, itemName, predicted, timestamp, killCount);
         }
     }
 
     private static void upsertLegendary(List<LegendaryInfo> list, String itemName, boolean predicted,
-                                        long timestamp) {
+                                        long timestamp, int killCount) {
         int index = findLegendaryIndex(list, itemName);
         if (index < 0) {
-            list.add(new LegendaryInfo(itemName, timestamp, predicted));
+            list.add(new LegendaryInfo(itemName, timestamp, predicted, killCount));
             return;
         }
 
         LegendaryInfo existing = list.get(index);
-        if (!predicted && existing.predicted) {
-            list.set(index, existing.asConfirmed());
+        long mergedTimestamp = Math.min(existing.craftedAtTimestamp, timestamp);
+        boolean mergedPredicted = existing.predicted && predicted;
+        int mergedKillCount = Math.max(existing.killCount, killCount);
+        LegendaryInfo mergedInfo = new LegendaryInfo(itemName, mergedTimestamp, mergedPredicted, mergedKillCount);
+
+        if (existing.craftedAtTimestamp != mergedTimestamp
+                || existing.predicted != mergedPredicted
+                || existing.killCount != mergedKillCount) {
+            list.set(index, mergedInfo);
         }
     }
 
@@ -200,9 +226,23 @@ public class CraftTracker {
         synchronized (list) {
             int geraldIndex = findLegendaryIndex(list, GERALD_THE_SNIFFER);
             if (geraldIndex < 0) {
-                upsertLegendary(list, itemName, false, System.currentTimeMillis());
+                upsertLegendary(list, itemName, false, System.currentTimeMillis(), 0);
                 return;
             }
+
+            LegendaryInfo geraldInfo = list.get(geraldIndex);
+            LegendaryInfo existingReplacement = null;
+            for (LegendaryInfo info : list) {
+                if (info.itemName.equals(itemName)) {
+                    existingReplacement = info;
+                    break;
+                }
+            }
+
+            long replacementTimestamp = existingReplacement == null
+                    ? geraldInfo.craftedAtTimestamp
+                    : Math.min(geraldInfo.craftedAtTimestamp, existingReplacement.craftedAtTimestamp);
+            int replacementKillCount = existingReplacement == null ? 0 : existingReplacement.killCount;
 
             List<LegendaryInfo> updated = new ArrayList<>(list.size());
             boolean insertedReplacement = false;
@@ -210,7 +250,12 @@ public class CraftTracker {
             for (LegendaryInfo info : list) {
                 if (info.itemName.equals(GERALD_THE_SNIFFER)) {
                     if (!insertedReplacement) {
-                        updated.add(new LegendaryInfo(itemName, info.craftedAtTimestamp, false));
+                        updated.add(new LegendaryInfo(
+                                itemName,
+                                replacementTimestamp,
+                                false,
+                                replacementKillCount
+                        ));
                         insertedReplacement = true;
                     }
                     continue;
@@ -228,11 +273,27 @@ public class CraftTracker {
             }
 
             if (!insertedReplacement) {
-                updated.add(new LegendaryInfo(itemName, System.currentTimeMillis(), false));
+                updated.add(new LegendaryInfo(itemName, replacementTimestamp, false, replacementKillCount));
             }
 
             list.clear();
             list.addAll(updated);
+        }
+    }
+
+    private static boolean shouldTrackMidasScore(String itemName, boolean experimentalMidasTrackingEnabled) {
+        return experimentalMidasTrackingEnabled && MIDAS_SWORD.equals(itemName);
+    }
+
+    private static void incrementLegendaryKillCount(String username, String itemName) {
+        List<LegendaryInfo> list = CRAFT_MAP.get(username);
+        if (list == null) return;
+
+        synchronized (list) {
+            int index = findLegendaryIndex(list, itemName);
+            if (index < 0) return;
+
+            list.set(index, list.get(index).incrementKillCount());
         }
     }
 }
