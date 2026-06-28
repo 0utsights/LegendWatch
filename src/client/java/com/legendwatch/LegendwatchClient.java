@@ -20,6 +20,7 @@ public class LegendwatchClient implements ClientModInitializer {
     private static KeyBinding toggleIconsKey;
     private static KeyBinding togglePredictedKey;
     private static KeyBinding toggleTransparentKey;
+    private static KeyBinding cycleMidasDisplayKey;
     //? if >=1.21.9 {
     private static final KeyBinding.Category KEY_CATEGORY =
             KeyBinding.Category.create(Identifier.of("legendwatch", "general"));
@@ -35,6 +36,7 @@ public class LegendwatchClient implements ClientModInitializer {
         toggleIconsKey = registerKeyBinding("key.legendwatch.toggle_icons");
         togglePredictedKey = registerKeyBinding("key.legendwatch.toggle_predicted");
         toggleTransparentKey = registerKeyBinding("key.legendwatch.toggle_transparent");
+        cycleMidasDisplayKey = registerKeyBinding("key.legendwatch.cycle_midas_display");
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (toggleModKey.wasPressed()) {
@@ -85,6 +87,23 @@ public class LegendwatchClient implements ClientModInitializer {
                             "Icon style",
                             nowEnabled ? "Transparent" : "Solid",
                             nowEnabled ? Formatting.GREEN : Formatting.GRAY
+                    ), false);
+                }
+            }
+
+            while (cycleMidasDisplayKey.wasPressed()) {
+                LegendwatchConfig.MidasDisplayMode nextMode =
+                        LegendwatchConfig.midasDisplayMode.updateAndGet(LegendwatchConfig.MidasDisplayMode::next);
+                LegendwatchConfig.save();
+                if (client.player != null) {
+                    client.player.sendMessage(statusMessage(
+                            "Midas display",
+                            nextMode.displayName(),
+                            switch (nextMode) {
+                                case SHARPNESS_ESTIMATE -> Formatting.AQUA;
+                                case KILL_COUNT -> Formatting.GREEN;
+                                case OFF -> Formatting.GRAY;
+                            }
                     ), false);
                 }
             }

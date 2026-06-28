@@ -50,8 +50,7 @@ public class CraftTracker {
     }
 
     public static void onLegendaryKillObserved(String username, String itemName,
-                                               boolean experimentalGeraldTrackingEnabled,
-                                               boolean experimentalMidasTrackingEnabled) {
+                                               boolean experimentalGeraldTrackingEnabled) {
         if (username == null || username.isBlank() || itemName == null || itemName.isBlank()) return;
 
         if (experimentalGeraldTrackingEnabled
@@ -62,28 +61,28 @@ public class CraftTracker {
             } else {
                 recordPredicted(username, itemName);
             }
-            if (shouldTrackMidasScore(itemName, experimentalMidasTrackingEnabled)) {
+            if (shouldTrackMidasScore(itemName)) {
                 incrementLegendaryKillCount(username, itemName);
             }
             return;
         }
 
         if (confirmLegendary(username, itemName)) {
-            if (shouldTrackMidasScore(itemName, experimentalMidasTrackingEnabled)) {
+            if (shouldTrackMidasScore(itemName)) {
                 incrementLegendaryKillCount(username, itemName);
             }
             return;
         }
 
         if (hasLegendary(username, itemName)) {
-            if (shouldTrackMidasScore(itemName, experimentalMidasTrackingEnabled)) {
+            if (shouldTrackMidasScore(itemName)) {
                 incrementLegendaryKillCount(username, itemName);
             }
             return;
         }
 
         recordCraft(username, itemName);
-        if (shouldTrackMidasScore(itemName, experimentalMidasTrackingEnabled)) {
+        if (shouldTrackMidasScore(itemName)) {
             incrementLegendaryKillCount(username, itemName);
         }
     }
@@ -281,8 +280,8 @@ public class CraftTracker {
         }
     }
 
-    private static boolean shouldTrackMidasScore(String itemName, boolean experimentalMidasTrackingEnabled) {
-        return experimentalMidasTrackingEnabled && MIDAS_SWORD.equals(itemName);
+    private static boolean shouldTrackMidasScore(String itemName) {
+        return MIDAS_SWORD.equals(itemName);
     }
 
     private static void incrementLegendaryKillCount(String username, String itemName) {

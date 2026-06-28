@@ -134,8 +134,7 @@ public class ChatListener {
                 CraftTracker.onLegendaryKillObserved(
                         exactLegendaryElimination.slayer(),
                         exactLegendaryElimination.observedLegendaryName(),
-                        LegendwatchConfig.experimentalGeraldTrackingEnabled.get(),
-                        LegendwatchConfig.experimentalMidasTrackingEnabled.get()
+                        LegendwatchConfig.experimentalGeraldTrackingEnabled.get()
                 );
             }
             return;
@@ -150,8 +149,7 @@ public class ChatListener {
                 CraftTracker.onLegendaryKillObserved(
                         elimination.slayer(),
                         elimination.observedLegendaryName(),
-                        LegendwatchConfig.experimentalGeraldTrackingEnabled.get(),
-                        LegendwatchConfig.experimentalMidasTrackingEnabled.get()
+                        LegendwatchConfig.experimentalGeraldTrackingEnabled.get()
                 );
             }
             return;

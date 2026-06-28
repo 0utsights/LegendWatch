@@ -50,9 +50,22 @@ public class LegendSuffixUtil {
     }
 
     private static String getExperimentalScoreSuffix(LegendaryInfo info) {
-        if (!LegendwatchConfig.experimentalMidasTrackingEnabled.get()) return "";
         if (!CraftTracker.MIDAS_SWORD.equals(info.itemName)) return "";
         if (info.killCount <= 0) return "";
-        return " " + info.killCount;
+
+        LegendwatchConfig.MidasDisplayMode displayMode = LegendwatchConfig.midasDisplayMode.get();
+        return switch (displayMode) {
+            case SHARPNESS_ESTIMATE -> " S" + estimateMidasSharpness(info.killCount);
+            case KILL_COUNT -> " x" + info.killCount;
+            case OFF -> "";
+        };
+    }
+
+    private static int estimateMidasSharpness(int killCount) {
+        if (killCount <= 0) return 0;
+        if (killCount <= 2) return killCount;
+
+        // Kills 1 and 2 are guaranteed sharpness. After that, estimate a level on odd kills.
+        return 2 + ((killCount - 1) / 2);
     }
 }
