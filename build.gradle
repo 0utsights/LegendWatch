@@ -1,8 +1,15 @@
 plugins {
     id 'dev.kikugie.stonecutter'
-    id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+    id 'net.fabricmc.fabric-loom' version "${loom_version}" apply false
+    id 'net.fabricmc.fabric-loom-remap' version "${loom_version}" apply false
     id 'maven-publish'
 }
+
+def unobfuscatedMinecraft = minecraft_version.startsWith('26.')
+def targetJavaVersion = unobfuscatedMinecraft ? 25 : 21
+apply plugin: unobfuscatedMinecraft
+        ? 'net.fabricmc.fabric-loom'
+        : 'net.fabricmc.fabric-loom-remap'
 
 version = "${project.mod_version}+${minecraft_version}"
 group = project.maven_group
@@ -26,29 +33,40 @@ loom {
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    if (unobfuscatedMinecraft) {
+        implementation "net.fabricmc:fabric-loader:${loader_version}"
+        implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    } else {
+        mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
+        modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+        modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    }
 }
 
 processResources {
     inputs.property "version", project.version
     inputs.property "minecraft_version", minecraft_version
+    inputs.property "java_version", targetJavaVersion
+    inputs.property "loader_version", loader_version
 
     filesMatching("fabric.mod.json") {
         expand "version": inputs.properties.version,
-                "minecraft_version": minecraft_version
+                "minecraft_version": minecraft_version,
+                "java_version": targetJavaVersion,
+                "loader_version": loader_version
     }
+
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 21
+    it.options.release = targetJavaVersion
 }
 
 java {
     withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    def javaVersion = unobfuscatedMinecraft ? JavaVersion.VERSION_25 : JavaVersion.VERSION_21
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
 }
 
 jar {

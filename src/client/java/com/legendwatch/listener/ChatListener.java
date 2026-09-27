@@ -4,7 +4,11 @@ import com.legendwatch.LegendwatchConfig;
 import com.legendwatch.icons.LegendaryIcons;
 import com.legendwatch.tracker.CraftTracker;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
-import net.minecraft.text.Text;
+//? if >=26.1 {
+import net.minecraft.network.chat.Component;
+//?} else {
+/*import net.minecraft.text.Text;
+*///?}
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -102,7 +106,11 @@ public class ChatListener {
         );
     }
 
-    private static void onGameMessage(Text message, boolean overlay) {
+    //? if >=26.1 {
+    private static void onGameMessage(Component message, boolean overlay) {
+    //?} else {
+    /*private static void onGameMessage(Text message, boolean overlay) {
+    *///?}
         if (overlay) return;
 
         String raw = message.getString();

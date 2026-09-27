@@ -1,18 +1,27 @@
 package com.legendwatch.mixin.client;
 
 import com.legendwatch.util.LegendSuffixUtil;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
+//? if >=26.1 {
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.world.entity.Entity;
+//?} else if >=1.21.2 {
+/*import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.EntityRenderer;
-//? if >=1.21.2 {
 import net.minecraft.client.render.entity.state.EntityRenderState;
+import net.minecraft.entity.Entity;
+import net.minecraft.text.Text;*/
 //?} else {
 /*import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;*/
-//?}
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
-import net.minecraft.text.Text;
+import net.minecraft.text.Text;*/
+//?}
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 //? if >=1.21.2 {
@@ -23,8 +32,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(EntityRenderer.class)
 public class PlayerNametagMixin {
 
-    //? if >=1.21.2 {
-    @Inject(method = "updateRenderState", at = @At("TAIL"))
+    //? if >=26.1 {
+    @Inject(method = "extractRenderState", at = @At("TAIL"))
+    private void appendLegendarySuffix(Entity entity, EntityRenderState state,
+                                        float tickDelta, CallbackInfo ci) {
+        if (!(entity instanceof AbstractClientPlayer player)) return;
+        if (state.nameTag == null) return;
+
+        state.nameTag = LegendSuffixUtil.appendIfLegendary(
+                state.nameTag,
+                player.getName().getString()
+        );
+    }
+    //?} else if >=1.21.2 {
+    /*@Inject(method = "updateRenderState", at = @At("TAIL"))
     private void appendLegendarySuffix(Entity entity, EntityRenderState state,
                                         float tickDelta, CallbackInfo ci) {
         if (!(entity instanceof AbstractClientPlayerEntity player)) return;
@@ -34,7 +55,7 @@ public class PlayerNametagMixin {
                 state.displayName,
                 player.getName().getString()
         );
-    }
+    }*/
     //?} else {
     /*@WrapOperation(
         method = "renderLabelIfPresent",
