@@ -26,6 +26,8 @@ LegendWatch listens to chat for legendary craft announcements and records who cr
 | Minecraft | Fabric API |
 |-----------|------------|
 | 1.21.11   | ✅ |
+| 26.2      | ✅ |
+| 26.3      | ✅ |
 
 ## Installation
 
@@ -37,14 +39,16 @@ LegendWatch listens to chat for legendary craft announcements and records who cr
 
 ## Requirements
 
-- Minecraft 1.21.8 through 1.21.11
-- Fabric Loader 0.18.1+
+- Minecraft 1.21.11, 26.2, or 26.3
+- Fabric Loader 0.18.4+ for 1.21.11; 0.19.5+ for 26.2 and 26.3
 - Fabric API
+- Java 21 for 1.21.11; Java 25 for 26.2 and 26.3
 
 ## Building from source
 
 ```bash
-./gradlew build
+./gradlew chiseledBuild
 ```
 
-Output jar will be in `build/libs/`.
+Output jars will be in `versions/<minecraft-version>/build/libs/`.
+To build only Minecraft 26.3, run `./gradlew :26.3:build`.

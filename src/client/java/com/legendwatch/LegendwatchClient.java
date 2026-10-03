@@ -11,21 +11,17 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-//?} else if >=1.21.9 {
+//?} else {
 /*import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.client.network.ClientPlayerEntity;*/
-//?} else {
-/*import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
-import net.minecraft.client.network.ClientPlayerEntity;*/
 //?}
-import org.lwjgl.glfw.GLFW;
+//? if <26.1 {
+/*import org.lwjgl.glfw.GLFW;
+*///?}
 
 public class LegendwatchClient implements ClientModInitializer {
 
@@ -37,7 +33,7 @@ public class LegendwatchClient implements ClientModInitializer {
     private static KeyMapping cycleMidasDisplayKey;
     private static final KeyMapping.Category KEY_CATEGORY =
             KeyMapping.Category.register(Identifier.fromNamespaceAndPath("legendwatch", "general"));
-    //?} else if >=1.21.9 {
+    //?} else {
     /*private static KeyBinding toggleModKey;
     private static KeyBinding toggleIconsKey;
     private static KeyBinding togglePredictedKey;
@@ -45,12 +41,6 @@ public class LegendwatchClient implements ClientModInitializer {
     private static KeyBinding cycleMidasDisplayKey;
     private static final KeyBinding.Category KEY_CATEGORY =
             KeyBinding.Category.create(Identifier.of("legendwatch", "general"));*/
-    //?} else {
-    /*private static KeyBinding toggleModKey;
-    private static KeyBinding toggleIconsKey;
-    private static KeyBinding togglePredictedKey;
-    private static KeyBinding toggleTransparentKey;
-    private static KeyBinding cycleMidasDisplayKey;*/
     //?}
 
     @Override
@@ -183,12 +173,12 @@ public class LegendwatchClient implements ClientModInitializer {
     private static KeyMapping registerKeyBinding(String translationKey) {
         return KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 translationKey,
-                InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_UNKNOWN,
+                InputConstants.UNKNOWN.getType(),
+                InputConstants.UNKNOWN.getValue(),
                 KEY_CATEGORY
         ));
     }
-    //?} else if >=1.21.9 {
+    //?} else {
     /*private static KeyBinding registerKeyBinding(String translationKey) {
         return KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 translationKey,
@@ -197,14 +187,5 @@ public class LegendwatchClient implements ClientModInitializer {
                 KEY_CATEGORY
         ));
     }
-    *///?} else {
-    /*private static KeyBinding registerKeyBinding(String translationKey) {
-        return KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                translationKey,
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_UNKNOWN,
-                "key.category.legendwatch.general"
-        ));
-    }*/
-    //?}
+    *///?}
 }
