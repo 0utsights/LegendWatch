@@ -1,11 +1,16 @@
 package com.legendwatch.icons;
 
-import net.minecraft.text.Text;
-//? if >=1.21.9 {
+//? if >=26.1 {
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.resources.Identifier;
+//?} else {
+/*import net.minecraft.text.Text;
 import net.minecraft.text.StyleSpriteSource;
-//?}
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.Identifier;*/
+//?}
 import com.legendwatch.LegendwatchConfig;
 
 import java.util.Map;
@@ -28,18 +33,17 @@ public class LegendaryIcons {
         }
     }
 
-    //? if >=1.21.9 {
-    private static final StyleSpriteSource ICON_FONT =
+    //? if >=26.1 {
+    private static final FontDescription ICON_FONT =
+            new FontDescription.Resource(Identifier.fromNamespaceAndPath("legendwatch", "icons"));
+    private static final FontDescription TRANSPARENT_ICON_FONT =
+            new FontDescription.Resource(Identifier.fromNamespaceAndPath("legendwatch", "transparent_icons"));
+    //?} else {
+    /*private static final StyleSpriteSource ICON_FONT =
             new StyleSpriteSource.Font(Identifier.of("legendwatch", "icons"));
     private static final StyleSpriteSource TRANSPARENT_ICON_FONT =
             new StyleSpriteSource.Font(Identifier.of("legendwatch", "transparent_icons"));
-    //?} else if >=1.21 {
-    /*private static final Identifier ICON_FONT = Identifier.of("legendwatch", "icons");
-    private static final Identifier TRANSPARENT_ICON_FONT = Identifier.of("legendwatch", "transparent_icons");*/
-    //?} else {
-    /*private static final Identifier ICON_FONT = new Identifier("legendwatch", "icons");
-    private static final Identifier TRANSPARENT_ICON_FONT = new Identifier("legendwatch", "transparent_icons");*/
-    //?}
+    *///?}
 
     private static final Map<String, LegendaryDefinition> LEGENDARY_MAP = Map.ofEntries(
         Map.entry("Emerald Blade",            new LegendaryDefinition("\uE000")),
@@ -97,21 +101,35 @@ public class LegendaryIcons {
         Map.entry("Vampire Sabre",            new LegendaryDefinition("\uE034"))
     );
 
-    public static Text getDisplay(String itemName) {
+    //? if >=26.1 {
+    public static Component getDisplay(String itemName) {
+    //?} else {
+    /*public static Text getDisplay(String itemName) {
+    *///?}
         LegendaryDefinition legendary = LEGENDARY_MAP.get(itemName);
         if (legendary != null && legendary.hasIcon()) {
-            //? if >=1.21.9 {
-            StyleSpriteSource font = LegendwatchConfig.transparentIconsEnabled.get()
+            //? if >=26.1 {
+            FontDescription font = LegendwatchConfig.transparentIconsEnabled.get()
                     ? TRANSPARENT_ICON_FONT : ICON_FONT;
             //?} else {
-            /*Identifier font = LegendwatchConfig.transparentIconsEnabled.get()
-                    ? TRANSPARENT_ICON_FONT : ICON_FONT;*/
-            //?}
-            return Text.literal(legendary.codepoint())
+            /*StyleSpriteSource font = LegendwatchConfig.transparentIconsEnabled.get()
+                    ? TRANSPARENT_ICON_FONT : ICON_FONT;
+            *///?}
+            //? if >=26.1 {
+            return Component.literal(legendary.codepoint())
+                    .withStyle(style -> style.withFont(font)
+                                             .withColor(0xFFFFFF));
+            //?} else {
+            /*return Text.literal(legendary.codepoint())
                     .styled(style -> style.withFont(font)
                                          .withColor(0xFFFFFF));
+            *///?}
         }
-        return Text.literal(itemName).formatted(Formatting.GOLD);
+        //? if >=26.1 {
+        return Component.literal(itemName).withStyle(ChatFormatting.GOLD);
+        //?} else {
+        /*return Text.literal(itemName).formatted(Formatting.GOLD);
+        *///?}
     }
 
     public static boolean hasIcon(String itemName) {
